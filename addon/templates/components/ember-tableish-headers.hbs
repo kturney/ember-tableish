@@ -1,0 +1,27 @@
+{{yield (hash
+  header=(component 'ember-tableish-header' headers=this)
+)}}
+
+<style>
+  #{{this.table.elementId}} .ember-tableish-headers {
+    -ms-grid-columns: {{this.columnsTemplate}};
+    grid-template-columns: {{this.columnsTemplate}};
+  }
+
+  #{{this.table.elementId}} .ember-tableish-row {
+    -ms-grid-columns: {{this.columnsTemplate}};
+    grid-template-columns: {{this.columnsTemplate}};
+  }
+
+  {{#each this.cols as |col i|}}
+    #{{this.table.elementId}} .ember-tableish-headers *:nth-child({{i}}) {
+      -ms-grid-row: 1;
+      -ms-grid-column: {{i}};
+    }
+
+    #{{this.table.elementId}} .ember-tableish-row *:nth-child({{i}}) {
+      -ms-grid-row: 1;
+      -ms-grid-column: {{i}};
+    }
+  {{/each}}
+</style>

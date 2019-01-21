@@ -7,6 +7,7 @@ const Router = EmberRouter.extend({
 });
 
 Router.map(function() {
+  this.route('ting', { path: '/ting/:ting_id' });
 });
 
 export default Router;

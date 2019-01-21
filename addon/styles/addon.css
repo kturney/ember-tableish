@@ -1,0 +1,20 @@
+.ember-tableish {
+  display: flex;
+  flex-direction: column;
+}
+
+.ember-tableish-headers {
+  flex: none;
+  display: -ms-grid;
+  display: grid;
+}
+
+.ember-tableish-body {
+  flex: 1;
+  width: 100%;
+}
+
+.ember-tableish-row {
+  display: -ms-grid;
+  display: grid;
+}
