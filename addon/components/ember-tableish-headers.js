@@ -42,7 +42,9 @@ export default Component.extend({
 
     const tableId = this.table.elementId;
     // see https://css-tricks.com/preventing-a-grid-blowout for why we need to use minmax
-    const columnsTemplate = this.cols.map(c => `minmax(0, ${c.width})`).join(' ');
+    const columnsTemplate = this.cols
+      .map(c => `minmax(0, ${c.width})`)
+      .join(' ');
 
     const rowSelector = `#${tableId} .ember-tableish-row`;
     const rowStyle = `-ms-grid-columns: ${columnsTemplate}; grid-template-columns: ${columnsTemplate};`;

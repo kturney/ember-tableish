@@ -3,5 +3,5 @@ import layout from '../templates/components/ember-tableish-row';
 
 export default Component.extend({
   layout,
-  classNames: [ 'ember-tableish-row' ]
+  classNames: ['ember-tableish-row']
 });
