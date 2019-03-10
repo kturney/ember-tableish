@@ -3,18 +3,19 @@ import layout from '../templates/components/ember-tableish-header';
 
 export default Component.extend({
   layout,
+  classNames: ['ember-tableish-header'],
 
   width: '1fr',
 
   init() {
     this._super(...arguments);
 
-    this.headers.cols.pushObject(this);
+    this.headers.addHeader(this);
   },
 
   willDestroy() {
     this._super(...arguments);
 
-    this.headers.cols.removeObject(this);
+    this.headers.removeHeader(this);
   }
 });

@@ -1,0 +1,23 @@
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+.main-table {
+  height: 100vh;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  min-height: 0;
+}
+
+.ember-tableish-headers {
+  background-color: red;
+}
+
+.ember-tableish-body {
+  overflow-y: scroll;
+}
