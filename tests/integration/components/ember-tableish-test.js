@@ -341,4 +341,101 @@ module('Integration | Component | ember-tableish', function(hooks) {
       }
     }
   });
+
+  test('can set and update columnGap for the table', async function(assert) {
+    this.columnGap = '10px';
+
+    await render(hbs`
+      {{#ember-tableish columnGap=this.columnGap as |table|}}
+        {{#table.headers as |headers|}}
+          {{#headers.header}}Title{{/headers.header}}
+          {{#headers.header}}Name{{/headers.header}}
+        {{/table.headers}}
+
+        {{#table.body}}
+          {{#each heros as |hero|}}
+            {{#table.row}}
+              <div class='ember-tableish-cell'>{{hero.title}}</div>
+              <div class='ember-tableish-cell'>{{hero.name}}</div>
+            {{/table.row}}
+          {{/each}}
+        {{/table.body}}
+      {{/ember-tableish}}
+    `);
+
+    assert.dom('.ember-tableish-header').exists({ count: 2 });
+    assert.dom('.ember-tableish-row').exists({ count: heros.length });
+
+    const [firstHeader, secondHeader] = this.element.querySelectorAll(
+      '.ember-tableish-header'
+    );
+
+    const origGapSize =
+      secondHeader.getBoundingClientRect().left -
+      firstHeader.getBoundingClientRect().right;
+
+    assert.ok(origGapSize > 0, 'headers have a gap');
+
+    for (let i = 0, il = heros.length; i < il; ++i) {
+      const [firstCol, secondCol] = this.element.querySelectorAll(
+        `.ember-tableish-row:nth-child(${i + 1}) .ember-tableish-cell`
+      );
+
+      assert.equal(
+        firstCol.getBoundingClientRect().width,
+        firstHeader.getBoundingClientRect().width,
+        `row ${i}, col 0 width`
+      );
+
+      assert.equal(
+        secondCol.getBoundingClientRect().width,
+        secondHeader.getBoundingClientRect().width,
+        `row ${i}, col 1 width`
+      );
+
+      assert.equal(
+        secondCol.getBoundingClientRect().left -
+          firstCol.getBoundingClientRect().right,
+        origGapSize,
+        `row ${i} gap`
+      );
+    }
+
+    this.set('columnGap', '20px');
+
+    const updatedGapSize =
+      secondHeader.getBoundingClientRect().left -
+      firstHeader.getBoundingClientRect().right;
+
+    assert.ok(
+      updatedGapSize >= origGapSize * 2 - 1 ||
+        updatedGapSize <= origGapSize * 2 + 1,
+      'updated gap size is about double the original gap size'
+    );
+
+    for (let i = 0, il = heros.length; i < il; ++i) {
+      const [firstCol, secondCol] = this.element.querySelectorAll(
+        `.ember-tableish-row:nth-child(${i + 1}) .ember-tableish-cell`
+      );
+
+      assert.equal(
+        firstCol.getBoundingClientRect().width,
+        firstHeader.getBoundingClientRect().width,
+        `row ${i}, col 0 width`
+      );
+
+      assert.equal(
+        secondCol.getBoundingClientRect().width,
+        secondHeader.getBoundingClientRect().width,
+        `row ${i}, col 1 width`
+      );
+
+      assert.equal(
+        secondCol.getBoundingClientRect().left -
+          firstCol.getBoundingClientRect().right,
+        updatedGapSize,
+        `row ${i} gap`
+      );
+    }
+  });
 });

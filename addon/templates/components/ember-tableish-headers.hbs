@@ -5,16 +5,21 @@
 <style nonce={{this.nonce}}>
   #{{table.elementId}} .ember-tableish-headers,
   #{{table.elementId}} .ember-tableish-row {
-    -ms-grid-columns: {{this.gridColumns}};
+    -ms-grid-columns: {{this.msGridColumns}};
     grid-template-columns: {{this.gridColumns}};
+
+  {{#if table.columnGap}}
+    grid-column-gap: {{table.columnGap}};
+    column-gap: {{table.columnGap}};
+  {{/if}}
   }
 
   {{!-- in IE (and old Edge), items need to be explicitly positioned in the grid --}}
-  {{#each this.columnIndicies as |index|}}
-    #{{table.elementId}} .ember-tableish-header:nth-of-type({{index}}),
-    #{{table.elementId}} .ember-tableish-row >:nth-child({{index}}) {
+  {{#each this.msCellPlacements as |placement|}}
+    #{{table.elementId}} .ember-tableish-header:nth-of-type({{placement.child}}),
+    #{{table.elementId}} .ember-tableish-row >:nth-child({{placement.child}}) {
       -ms-grid-row: 1;
-      -ms-grid-column: {{index}};
+      -ms-grid-column: {{placement.column}};
     }
   {{/each}}
 </style>

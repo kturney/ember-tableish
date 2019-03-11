@@ -40,16 +40,38 @@ export default Component.extend({
     }
   }),
 
-  columnIndicies: computed('cols.length', {
+  msGridColumns: computed('gridColumns', 'table.columnGap', {
     get() {
-      const colCount = this.cols.length;
+      const { columnGap } = this.table;
 
-      const indicies = new Array(colCount);
-      for (let i = 0; i < colCount; ++i) {
-        indicies[i] = i + 1;
+      if (columnGap) {
+        return this.cols
+          .map(c => `minmax(0, ${c.width})`)
+          .join(` ${columnGap} `);
       }
 
-      return indicies;
+      return this.gridColumns;
+    }
+  }),
+
+  msCellPlacements: computed('cols.length', 'table.columnGap', {
+    get() {
+      const placements = [];
+      const colCount = this.cols.length;
+
+      let child = 1;
+      let column = 1;
+      const childStep = 1;
+      const columnStep = this.table.columnGap ? 2 : 1;
+
+      while (child <= colCount) {
+        placements.push({ child, column });
+
+        child += childStep;
+        column += columnStep;
+      }
+
+      return placements;
     }
   }),
 
