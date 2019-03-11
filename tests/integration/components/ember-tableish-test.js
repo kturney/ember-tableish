@@ -3,24 +3,62 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
+const heros = [
+  { title: 'Superman', name: 'Clark Kent' },
+  { title: 'Batman', name: 'Bruce wayne' },
+  { title: 'Spider Man', name: 'Peter Parker' },
+  { title: 'Green Lantern', name: 'Hal jordan' },
+  { title: 'Captain America', name: 'Steve Rogers' },
+  { title: 'Wonder Woman', name: 'Diane Lane' },
+  { title: 'Martian Manhunter', name: "J'onn J'onzz" },
+  { title: 'Iron Man', name: 'Tony Stark' },
+  { title: 'Hulk', name: 'Bruce Banner' },
+  { title: 'Daredevil', name: 'Matt Murdock' }
+];
+
 module('Integration | Component | ember-tableish', function(hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.set('myAction', function(val) { ... });
+  hooks.beforeEach(function() {
+    this.heros = heros;
+  });
 
-    await render(hbs`{{ember-tableish}}`);
-
-    assert.equal(this.element.textContent.trim(), '');
-
-    // Template block usage:
+  test('it renders columns the same width as headers', async function(assert) {
     await render(hbs`
-      {{#ember-tableish}}
-        template block text
+      {{#ember-tableish as |table|}}
+        {{#table.headers as |headers|}}
+          {{#headers.header}}Title{{/headers.header}}
+          {{#headers.header}}Name{{/headers.header}}
+        {{/table.headers}}
+
+        {{#table.body}}
+          {{#each heros as |hero|}}
+            {{#table.row}}
+              <div class='ember-tableish-cell'>{{hero.title}}</div>
+              <div class='ember-tableish-cell'>{{hero.name}}</div>
+            {{/table.row}}
+          {{/each}}
+        {{/table.body}}
       {{/ember-tableish}}
     `);
 
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    assert.dom('.ember-tableish-header').exists({ count: 2 });
+    assert.dom('.ember-tableish-row').exists({ count: heros.length });
+
+    const colWidths = Array.from(
+      this.element.querySelectorAll('.ember-tableish-header')
+    ).map(element => element.getBoundingClientRect().width);
+
+    for (let i = 0, il = heros.length; i < il; ++i) {
+      const row = `.ember-tableish-row:nth-child(${i + 1})`;
+
+      for (let j = 0, jl = colWidths.length; j < jl; ++j) {
+        const cellwidth = this.element
+          .querySelector(`${row} .ember-tableish-cell:nth-child(${j + 1})`)
+          .getBoundingClientRect().width;
+
+        assert.equal(cellwidth, colWidths[j], `row ${i}, col ${j} width`);
+      }
+    }
   });
 });
