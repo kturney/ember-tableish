@@ -9,6 +9,7 @@ sudo: false
 dist: trusty
 
 addons:
+  firefox: latest
   chrome: stable
 
 cache:
@@ -55,6 +56,11 @@ jobs:
     - env: EMBER_TRY_SCENARIO=ember-beta
     - env: EMBER_TRY_SCENARIO=ember-canary
     - env: EMBER_TRY_SCENARIO=ember-default-with-jquery
+
+before_script:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
 
 before_install:
   - curl -o- -L https://yarnpkg.com/install.sh | bash
