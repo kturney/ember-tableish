@@ -1,5 +1,20 @@
-<style nonce={{this.nonce}}></style>
-
 {{yield (hash
   header=(component 'ember-tableish-header' headers=this)
 )}}
+
+<style nonce={{this.nonce}}>
+  #{{@table.elementId}} .ember-tableish-headers,
+  #{{@table.elementId}} .ember-tableish-row {
+    -ms-grid-columns: {{this.gridColumns}};
+    grid-template-columns: {{this.gridColumns}};
+  }
+
+  {{!-- in IE (and old Edge), items need to be explicitly positioned in the grid --}}
+  {{#each this.columnIndicies as |index|}}
+    #{{@table.elementId}} .ember-tableish-header:nth-of-type({{index}}),
+    #{{@table.elementId}} .ember-tableish-row >:nth-child({{index}}) {
+      -ms-grid-row: 1;
+      -ms-grid-column: {{index}};
+    }
+  {{/each}}
+</style>
