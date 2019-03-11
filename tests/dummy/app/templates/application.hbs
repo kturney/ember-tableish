@@ -11,32 +11,6 @@
     {{/headers.header}}
   {{/table.headers}}
 
-  {{!-- {{#vertical-collection
-    tagName='div'
-    class=table.bodyCls
-    estimateHeight='24px'
-    items=items
-  as |item|}}
-    {{#table.row}}
-      <div>{{item.kyle}}</div>
-      <div>{{item.justin}}</div>
-      <div>{{item.turney}}</div>
-    {{/table.row}}
-  {{/vertical-collection}} --}}
-
-  {{!-- {{#vertical-collection
-    tagName='div'
-    class=table.bodyCls
-    estimateHeight='18px'
-    items=items
-  as |item i|}}
-    {{#link-to 'ting' i class=table.rowCls}}
-      <div>{{item.kyle}}</div>
-      <div>{{item.justin}}</div>
-      <div>{{item.turney}}</div>
-    {{/link-to}}
-  {{/vertical-collection}} --}}
-
   {{#table.body}}
     {{#each items as |item|}}
       {{#table.row}}
