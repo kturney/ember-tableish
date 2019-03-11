@@ -29,6 +29,13 @@ module.exports = function(environment) {
     // ENV.APP.LOG_TRANSITIONS = true;
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
+
+    ENV.contentSecurityPolicyHeader = null;
+    ENV.contentSecurityPolicyMeta = true;
+    ENV.contentSecurityPolicy = {
+      'style-src': ["'self'", "'nonce-123456789'"]
+    };
+    ENV['ember-tableish-csp-nonce'] = '123456789';
   }
 
   if (environment === 'test') {
@@ -41,6 +48,12 @@ module.exports = function(environment) {
 
     ENV.APP.rootElement = '#ember-testing';
     ENV.APP.autoboot = false;
+
+    ENV.contentSecurityPolicyMeta = true;
+    ENV.contentSecurityPolicy = {
+      'style-src': ["'self'", "'nonce-123456789'"]
+    };
+    ENV['ember-tableish-csp-nonce'] = '123456789';
   }
 
   if (environment === 'production') {
