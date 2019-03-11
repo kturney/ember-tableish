@@ -127,4 +127,174 @@ module('Integration | Component | ember-tableish', function(hooks) {
       );
     }
   });
+
+  test('it handles column removal', async function(assert) {
+    this.showCol = true;
+
+    await render(hbs`
+      {{#ember-tableish as |table|}}
+        {{#table.headers as |headers|}}
+          {{#headers.header}}Title{{/headers.header}}
+          {{#headers.header}}Name{{/headers.header}}
+
+          {{#if this.showCol}}
+            {{#headers.header}}Also name{{/headers.header}}
+          {{/if}}
+        {{/table.headers}}
+
+        {{#table.body}}
+          {{#each heros as |hero|}}
+            {{#table.row}}
+              <div class='ember-tableish-cell'>{{hero.title}}</div>
+              <div class='ember-tableish-cell'>{{hero.name}}</div>
+
+              {{#if this.showCol}}
+                <div class='ember-tableish-cell'>{{hero.name}}</div>
+              {{/if}}
+            {{/table.row}}
+          {{/each}}
+        {{/table.body}}
+      {{/ember-tableish}}
+    `);
+
+    assert.dom('.ember-tableish-header').exists({ count: 3 });
+    assert.dom('.ember-tableish-row').exists({ count: heros.length });
+
+    const origColwidths = Array.from(
+      this.element.querySelectorAll('.ember-tableish-header')
+    ).map(element => element.getBoundingClientRect().width);
+
+    for (let i = 0, il = heros.length; i < il; ++i) {
+      const row = `.ember-tableish-row:nth-child(${i + 1})`;
+
+      for (let j = 0, jl = origColwidths.length; j < jl; ++j) {
+        const cellwidth = this.element
+          .querySelector(`${row} .ember-tableish-cell:nth-child(${j + 1})`)
+          .getBoundingClientRect().width;
+
+        assert.equal(
+          cellwidth,
+          origColwidths[j],
+          `row ${i}, col ${j} original width`
+        );
+      }
+    }
+
+    this.set('showCol', false);
+
+    assert.dom('.ember-tableish-header').exists({ count: 2 });
+
+    const updatedColwidths = Array.from(
+      this.element.querySelectorAll('.ember-tableish-header')
+    ).map(element => element.getBoundingClientRect().width);
+
+    const updatedTotal = updatedColwidths.reduce((sum, width) => sum + width);
+    const origTotal = origColwidths.reduce((sum, width) => sum + width);
+
+    assert.ok(
+      updatedTotal >= origTotal - 1 || updatedTotal <= origTotal + 1,
+      `updated width total (${updatedTotal}) is about the same as the original total (${origTotal})`
+    );
+
+    for (let i = 0, il = heros.length; i < il; ++i) {
+      const row = `.ember-tableish-row:nth-child(${i + 1})`;
+
+      for (let j = 0, jl = updatedColwidths.length; j < jl; ++j) {
+        const cellwidth = this.element
+          .querySelector(`${row} .ember-tableish-cell:nth-child(${j + 1})`)
+          .getBoundingClientRect().width;
+
+        assert.equal(
+          cellwidth,
+          updatedColwidths[j],
+          `row ${i}, col ${j} updated width`
+        );
+      }
+    }
+  });
+
+  test('it handles column addition', async function(assert) {
+    this.showCol = false;
+
+    await render(hbs`
+      {{#ember-tableish as |table|}}
+        {{#table.headers as |headers|}}
+          {{#headers.header}}Title{{/headers.header}}
+          {{#headers.header}}Name{{/headers.header}}
+
+          {{#if this.showCol}}
+            {{#headers.header}}Also name{{/headers.header}}
+          {{/if}}
+        {{/table.headers}}
+
+        {{#table.body}}
+          {{#each heros as |hero|}}
+            {{#table.row}}
+              <div class='ember-tableish-cell'>{{hero.title}}</div>
+              <div class='ember-tableish-cell'>{{hero.name}}</div>
+
+              {{#if this.showCol}}
+                <div class='ember-tableish-cell'>{{hero.name}}</div>
+              {{/if}}
+            {{/table.row}}
+          {{/each}}
+        {{/table.body}}
+      {{/ember-tableish}}
+    `);
+
+    assert.dom('.ember-tableish-header').exists({ count: 2 });
+    assert.dom('.ember-tableish-row').exists({ count: heros.length });
+
+    const origColwidths = Array.from(
+      this.element.querySelectorAll('.ember-tableish-header')
+    ).map(element => element.getBoundingClientRect().width);
+
+    for (let i = 0, il = heros.length; i < il; ++i) {
+      const row = `.ember-tableish-row:nth-child(${i + 1})`;
+
+      for (let j = 0, jl = origColwidths.length; j < jl; ++j) {
+        const cellwidth = this.element
+          .querySelector(`${row} .ember-tableish-cell:nth-child(${j + 1})`)
+          .getBoundingClientRect().width;
+
+        assert.equal(
+          cellwidth,
+          origColwidths[j],
+          `row ${i}, col ${j} original width`
+        );
+      }
+    }
+
+    this.set('showCol', true);
+
+    assert.dom('.ember-tableish-header').exists({ count: 3 });
+
+    const updatedColwidths = Array.from(
+      this.element.querySelectorAll('.ember-tableish-header')
+    ).map(element => element.getBoundingClientRect().width);
+
+    const updatedTotal = updatedColwidths.reduce((sum, width) => sum + width);
+    const origTotal = origColwidths.reduce((sum, width) => sum + width);
+
+    assert.ok(
+      updatedTotal >= origTotal - 1 || updatedTotal <= origTotal + 1,
+      `updated width total (${updatedTotal}) is about the same as the original total (${origTotal})`
+    );
+
+    for (let i = 0, il = heros.length; i < il; ++i) {
+      const row = `.ember-tableish-row:nth-child(${i + 1})`;
+
+      for (let j = 0, jl = updatedColwidths.length; j < jl; ++j) {
+        const cellwidth = this.element
+          .querySelector(`${row} .ember-tableish-cell:nth-child(${j + 1})`)
+          .getBoundingClientRect().width;
+
+        assert.equal(
+          cellwidth,
+          updatedColwidths[j],
+          `row ${i}, col ${j} updated width`
+        );
+      }
+    }
+  });
 });
