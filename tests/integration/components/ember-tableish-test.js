@@ -61,4 +61,70 @@ module('Integration | Component | ember-tableish', function(hooks) {
       }
     }
   });
+
+  test('it handles column width changes', async function(assert) {
+    this.width = '100px';
+
+    await render(hbs`
+      {{#ember-tableish as |table|}}
+        {{#table.headers as |headers|}}
+          {{#headers.header width=this.width}}Title{{/headers.header}}
+          {{#headers.header}}Name{{/headers.header}}
+        {{/table.headers}}
+
+        {{#table.body}}
+          {{#each heros as |hero|}}
+            {{#table.row}}
+              <div class='ember-tableish-cell'>{{hero.title}}</div>
+              <div class='ember-tableish-cell'>{{hero.name}}</div>
+            {{/table.row}}
+          {{/each}}
+        {{/table.body}}
+      {{/ember-tableish}}
+    `);
+
+    const origColwidth = this.element
+      .querySelector('.ember-tableish-header')
+      .getBoundingClientRect().width;
+
+    for (let i = 0, il = heros.length; i < il; ++i) {
+      const row = `.ember-tableish-row:nth-child(${i + 1})`;
+
+      const cellwidth = this.element
+        .querySelector(`${row} .ember-tableish-cell:nth-child(1)`)
+        .getBoundingClientRect().width;
+
+      assert.equal(
+        cellwidth,
+        origColwidth,
+        `row ${i}, col ${0} original width`
+      );
+    }
+
+    this.set('width', '50px');
+
+    const updatedColwidth = this.element
+      .querySelector('.ember-tableish-header')
+      .getBoundingClientRect().width;
+
+    assert.ok(
+      updatedColwidth >= origColwidth / 2 - 1 ||
+        updatedColwidth <= origColwidth / 2 + 1,
+      'updated width is about half of the original width'
+    );
+
+    for (let i = 0, il = heros.length; i < il; ++i) {
+      const row = `.ember-tableish-row:nth-child(${i + 1})`;
+
+      const cellwidth = this.element
+        .querySelector(`${row} .ember-tableish-cell:nth-child(1)`)
+        .getBoundingClientRect().width;
+
+      assert.equal(
+        cellwidth,
+        updatedColwidth,
+        `row ${i}, col ${0} updated width`
+      );
+    }
+  });
 });

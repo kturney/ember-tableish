@@ -1,6 +1,8 @@
+import { A as emberArray } from '@ember/array';
+import { cancel, scheduleOnce } from '@ember/runloop';
+import { observer } from '@ember/object';
 import Component from '@ember/component';
 import layout from '../templates/components/ember-tableish-headers';
-import { cancel, once } from '@ember/runloop';
 
 export default Component.extend({
   layout,
@@ -9,7 +11,7 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    this.cols = [];
+    this.cols = emberArray();
     this.scheduledStyleUpdate = null;
   },
 
@@ -20,16 +22,21 @@ export default Component.extend({
   },
 
   addHeader(header) {
-    this.cols.push(header);
-
-    this.scheduledStyleUpdate = once(this, this.updateStyles);
+    this.cols.pushObject(header);
   },
 
   removeHeader(header) {
-    this.cols = this.cols.filter(c => c !== header);
-
-    this.scheduledStyleUpdate = once(this, this.updateStyles);
+    this.cols.removeObject(header);
   },
+
+  // eslint-disable-next-line ember/no-observers
+  _headerObserver: observer('cols.@each.width', function() {
+    this.scheduledStyleUpdate = scheduleOnce(
+      'actions',
+      this,
+      this.updateStyles
+    );
+  }),
 
   updateStyles() {
     if (this.isDestroyed || this.isDestroying) {
@@ -42,9 +49,7 @@ export default Component.extend({
 
     const tableId = this.table.elementId;
     // see https://css-tricks.com/preventing-a-grid-blowout for why we need to use minmax
-    const columnsTemplate = this.cols
-      .map(c => `minmax(0, ${c.width})`)
-      .join(' ');
+    const columnsTemplate = cols.map(c => `minmax(0, ${c.width})`).join(' ');
 
     const rowSelector = `#${tableId} .ember-tableish-row`;
     const rowStyle = `-ms-grid-columns: ${columnsTemplate}; grid-template-columns: ${columnsTemplate};`;
