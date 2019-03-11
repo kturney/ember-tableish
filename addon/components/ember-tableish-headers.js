@@ -35,6 +35,7 @@ export default Component.extend({
 
   gridColumns: computed('cols.@each.width', {
     get() {
+      // see https://css-tricks.com/preventing-a-grid-blowout for why we need to use minmax
       return this.cols.map(c => `minmax(0, ${c.width})`).join(' ');
     }
   }),

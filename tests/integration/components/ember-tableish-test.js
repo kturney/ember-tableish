@@ -297,4 +297,48 @@ module('Integration | Component | ember-tableish', function(hooks) {
       }
     }
   });
+
+  test('columns cannot blowout their width', async function(assert) {
+    this.longText = '';
+    for (let i = 0; i < 100; ++i) {
+      this.longText += i;
+    }
+
+    await render(hbs`
+      {{#ember-tableish as |table|}}
+        {{#table.headers as |headers|}}
+          {{#headers.header}}Title{{/headers.header}}
+          {{#headers.header}}Name{{/headers.header}}
+        {{/table.headers}}
+
+        {{#table.body}}
+          {{#each heros as |hero|}}
+            {{#table.row}}
+              <pre class='ember-tableish-cell'>{{this.longText}}</pre>
+              <div class='ember-tableish-cell'>{{hero.name}}</div>
+            {{/table.row}}
+          {{/each}}
+        {{/table.body}}
+      {{/ember-tableish}}
+    `);
+
+    assert.dom('.ember-tableish-header').exists({ count: 2 });
+    assert.dom('.ember-tableish-row').exists({ count: heros.length });
+
+    const colWidths = Array.from(
+      this.element.querySelectorAll('.ember-tableish-header')
+    ).map(element => element.getBoundingClientRect().width);
+
+    for (let i = 0, il = heros.length; i < il; ++i) {
+      const row = `.ember-tableish-row:nth-child(${i + 1})`;
+
+      for (let j = 0, jl = colWidths.length; j < jl; ++j) {
+        const cellwidth = this.element
+          .querySelector(`${row} .ember-tableish-cell:nth-child(${j + 1})`)
+          .getBoundingClientRect().width;
+
+        assert.equal(cellwidth, colWidths[j], `row ${i}, col ${j} width`);
+      }
+    }
+  });
 });
