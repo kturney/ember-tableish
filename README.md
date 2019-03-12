@@ -45,9 +45,6 @@ This project is licensed under the [MIT License](LICENSE.md).
 
 Cross-browser testing provided by:
 
-<a href="http://browserstack.com">
-  <img
-    height="43"
-    width="188"
-    src="https://3fxtqy18kygf3on3bu39kh93-wpengine.netdna-ssl.com/wp-content/themes/browserstack/img/header-logo.svg" alt="BrowserStack">
+<a href="https://www.browserstack.com">
+  <img height="70" src="docs/browserstack-logo.svg" alt="BrowserStack">
 </a>
