@@ -45,17 +45,17 @@ jobs:
 
     - name: "Floating Dependencies"
       script:
-        - yarn test
+        - PERCY_ENABLE=0 yarn test
 
     # we recommend new addons test the current and previous LTS
     # as well as latest stable release (bonus points to beta/canary)
     - stage: "Additional Tests"
-      env: EMBER_TRY_SCENARIO=ember-lts-2.18
-    - env: EMBER_TRY_SCENARIO=ember-lts-3.4
-    - env: EMBER_TRY_SCENARIO=ember-release
-    - env: EMBER_TRY_SCENARIO=ember-beta
-    - env: EMBER_TRY_SCENARIO=ember-canary
-    - env: EMBER_TRY_SCENARIO=ember-default-with-jquery
+      env: PERCY_ENABLE=0 EMBER_TRY_SCENARIO=ember-lts-2.18
+    - env: PERCY_ENABLE=0 EMBER_TRY_SCENARIO=ember-lts-3.4
+    - env: PERCY_ENABLE=0 EMBER_TRY_SCENARIO=ember-release
+    - env: PERCY_ENABLE=0 EMBER_TRY_SCENARIO=ember-beta
+    - env: PERCY_ENABLE=0 EMBER_TRY_SCENARIO=ember-canary
+    - env: PERCY_ENABLE=0 EMBER_TRY_SCENARIO=ember-default-with-jquery
 
 before_script:
   - "export DISPLAY=:99.0"
