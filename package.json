@@ -1,13 +1,13 @@
 {
   "name": "ember-tableish",
   "version": "0.1.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "description": "A grid-based table-like thing",
   "keywords": [
     "ember-addon"
   ],
-  "repository": "",
+  "repository": "https://github.com/kturney/ember-tableish",
   "license": "MIT",
-  "author": "",
+  "author": "Kyle Turney <turney.kyle@gmail.com>",
   "directories": {
     "doc": "doc",
     "test": "tests"
