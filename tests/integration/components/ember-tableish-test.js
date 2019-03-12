@@ -1,6 +1,7 @@
 import { module, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
+import { percySnapshot } from 'ember-percy';
 import { render } from '@ember/test-helpers';
+import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 
 const heros = [
@@ -60,6 +61,8 @@ module('Integration | Component | ember-tableish', function(hooks) {
         assert.equal(cellwidth, colWidths[j], `row ${i}, col ${j} width`);
       }
     }
+
+    await percySnapshot(assert);
   });
 
   test('it handles column width changes', async function(assert) {
@@ -101,6 +104,8 @@ module('Integration | Component | ember-tableish', function(hooks) {
       );
     }
 
+    await percySnapshot('it handles column width changes: original');
+
     this.set('width', '50px');
 
     const updatedColwidth = this.element
@@ -126,6 +131,8 @@ module('Integration | Component | ember-tableish', function(hooks) {
         `row ${i}, col ${0} updated width`
       );
     }
+
+    await percySnapshot('it handles column width changes: updated');
   });
 
   test('it handles column removal', async function(assert) {
@@ -180,6 +187,8 @@ module('Integration | Component | ember-tableish', function(hooks) {
       }
     }
 
+    await percySnapshot('it handles column removal: original');
+
     this.set('showCol', false);
 
     assert.dom('.ember-tableish-header').exists({ count: 2 });
@@ -211,6 +220,8 @@ module('Integration | Component | ember-tableish', function(hooks) {
         );
       }
     }
+
+    await percySnapshot('it handles column removal: updated');
   });
 
   test('it handles column addition', async function(assert) {
@@ -265,6 +276,8 @@ module('Integration | Component | ember-tableish', function(hooks) {
       }
     }
 
+    await percySnapshot('it handles column addition: original');
+
     this.set('showCol', true);
 
     assert.dom('.ember-tableish-header').exists({ count: 3 });
@@ -296,6 +309,8 @@ module('Integration | Component | ember-tableish', function(hooks) {
         );
       }
     }
+
+    await percySnapshot('it handles column addition: updated');
   });
 
   test('columns cannot blowout their width', async function(assert) {
@@ -340,6 +355,8 @@ module('Integration | Component | ember-tableish', function(hooks) {
         assert.equal(cellwidth, colWidths[j], `row ${i}, col ${j} width`);
       }
     }
+
+    await percySnapshot(assert);
   });
 
   test('can set and update columnGap for the table', async function(assert) {
@@ -401,6 +418,8 @@ module('Integration | Component | ember-tableish', function(hooks) {
       );
     }
 
+    await percySnapshot('can set and update columnGap for the table: original');
+
     this.set('columnGap', '20px');
 
     const updatedGapSize =
@@ -437,5 +456,7 @@ module('Integration | Component | ember-tableish', function(hooks) {
         `row ${i} gap`
       );
     }
+
+    await percySnapshot('can set and update columnGap for the table: updated');
   });
 });
