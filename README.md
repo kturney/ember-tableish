@@ -6,10 +6,14 @@
 [travis-badge-url]: https://travis-ci.org/kturney/ember-tableish
 [ember-observer-badge]: http://emberobserver.com/badges/ember-tableish.svg
 [ember-observer-url]: http://emberobserver.com/addons/ember-tableish
+[browserstack-badge]: https://www.browserstack.com/automate/badge.svg?badge_key=VWJFUWl3OEpWRldvaXFhYU9YRWlZOWVQNmlvNGdQRnJ1bGJUVThidHowND0tLUZ6VEMxVWNnYXIwbVRQSjFhbmltNVE9PQ==--c31eecf4240110bbf5b0086e7aa698b1f23c7778
+[browserstack-badge-url]: https://www.browserstack.com/automate/badge.svg?badge_key=VWJFUWl3OEpWRldvaXFhYU9YRWlZOWVQNmlvNGdQRnJ1bGJUVThidHowND0tLUZ6VEMxVWNnYXIwbVRQSjFhbmltNVE9PQ==--c31eecf4240110bbf5b0086e7aa698b1f23c7778
 
 [![Latest NPM release][npm-badge]][npm-badge-url]
 [![TravisCI Build Status][travis-badge]][travis-badge-url]
 [![Ember Observer Score][ember-observer-badge]][ember-observer-url]
+[![BrowserStack Status][browserstack-badge]][browserstack-badge-url]
+
 
 mucking about to see what a grid based table might look like
 
