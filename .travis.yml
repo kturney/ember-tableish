@@ -3,10 +3,7 @@ language: node_js
 node_js:
   # we recommend testing addons with the same minimum supported node version as Ember CLI
   # so that your addon works for all apps
-  - "6"
-
-sudo: false
-dist: trusty
+  - "8"
 
 addons:
   firefox: latest
@@ -24,6 +21,7 @@ env:
     - AFTER_SCRIPT="true"
     - BEFORE_SCRIPT="true"
     - TEST_COMMAND=""
+    - PERCY_ENABLE=0
 
 branches:
   only:
@@ -46,26 +44,26 @@ jobs:
       script:
         - yarn lint:hbs
         - yarn lint:js
-        - yarn test
+        - PERCY_ENABLE=1 yarn test
 
     - name: "Floating Dependencies"
       script:
-        - PERCY_ENABLE=0 yarn test
+        - yarn test
 
     # we recommend new addons test the current and previous LTS
     # as well as latest stable release (bonus points to beta/canary)
     - stage: "Additional Tests"
-      env: PERCY_ENABLE=0 EMBER_TRY_SCENARIO=ember-lts-2.18
-    - env: PERCY_ENABLE=0 EMBER_TRY_SCENARIO=ember-lts-3.4
-    - env: PERCY_ENABLE=0 EMBER_TRY_SCENARIO=ember-release
-    - env: PERCY_ENABLE=0 EMBER_TRY_SCENARIO=ember-beta
-    - env: PERCY_ENABLE=0 EMBER_TRY_SCENARIO=ember-canary
-    - env: PERCY_ENABLE=0 EMBER_TRY_SCENARIO=ember-default-with-jquery
-    - env: PERCY_ENABLE=0 EMBER_TRY_SCENARIO=ember-default BEFORE_SCRIPT="ember browserstack:connect" AFTER_SCRIPT="ember browserstack:disconnect" TEST_COMMAND="ember test --config-file testem.browserstack.js"
-
-before_install:
-  - curl -o- -L https://yarnpkg.com/install.sh | bash
-  - export PATH=$HOME/.yarn/bin:$PATH
+      env: EMBER_TRY_SCENARIO=ember-lts-2.18
+    - env: EMBER_TRY_SCENARIO=ember-lts-3.4
+    - env: EMBER_TRY_SCENARIO=ember-release
+    - env: EMBER_TRY_SCENARIO=ember-beta
+    - env: EMBER_TRY_SCENARIO=ember-canary
+    - env: EMBER_TRY_SCENARIO=ember-default-with-jquery
+    - env:
+        - EMBER_TRY_SCENARIO=ember-default
+        - BEFORE_SCRIPT="ember browserstack:connect"
+        - AFTER_SCRIPT="ember browserstack:disconnect"
+        - TEST_COMMAND="ember test --config-file testem.browserstack.js"
 
 install:
   - yarn install --no-lockfile --non-interactive
