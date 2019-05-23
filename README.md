@@ -14,9 +14,8 @@
 [![Ember Observer Score][ember-observer-badge]][ember-observer-url]
 [![BrowserStack Status][browserstack-badge]][browserstack-badge-url]
 
-
-mucking about to see what a grid based table might look like
-
+A table implementation based on [CSS grid](https://developer.mozilla.org/en-US/docs/Web/CSS/grid) instead of semantic HTML table elements.
+Being grid based allows more flexibility, e.g. the ability to have rows be links.
 
 ## Compatibility
 
@@ -33,8 +32,64 @@ ember install ember-tableish
 
 ## Usage
 
-[Longer description of how to use the addon in apps.]
+To render simple content:
+```hbs
+<EmberTableish as |table|>
+  <table.Headers as |headers|>
+    <headers.Header @width='10rem'>
+      First Name
+    </headers.Header>
+    <headers.Header @width='10%'>
+      Middle Name
+    </headers.Header>
+    <headers.Header>
+      Last Name
+    </headers.Header>
+  </table.Headers>
 
+  <table.Body>
+    {{#each this.people as |person|}}
+      <table.Row>
+        <div>{{person.firstName}}</div>
+        <div>{{person.middleName}}</div>
+        <div>{{person.lastName}}</div>
+      </table.Row>
+    {{/each}}
+  </table.Body>
+</EmberTableish>
+```
+
+To render longer content with [vertical-collection](https://github.com/html-next/vertical-collection):
+```hbs
+<EmberTableish as |table|>
+  <table.Headers as |headers|>
+    <headers.Header @width='10rem'>
+      First Name
+    </headers.Header>
+    <headers.Header @width='10%'>
+      Middle Name
+    </headers.Header>
+    <headers.Header>
+      Last Name
+    </headers.Header>
+  </table.Headers>
+
+  <VerticalCollection
+    class={{table.bodyCls}}
+    @tagName='div'
+    @estimateHeight='1.5rem'
+    @items={{this.people}}
+  as |person|>
+    <LinkTo class={{table.rowCls}} @route='person' @model={{person.id}}>
+      <div>{{person.firstName}}</div>
+      <div>{{person.middleName}}</div>
+      <div>{{person.lastName}}</div>
+    </LinkTo>
+  </VerticalCollection>
+</EmberTableish>
+```
+
+Default column width is [`1fr`](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout/Basic_Concepts_of_Grid_Layout#The_fr_Unit).
 
 ## Contributing
 
