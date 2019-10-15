@@ -2,7 +2,7 @@ import { module, test } from 'qunit';
 import { percySnapshot } from 'ember-percy';
 import { render } from '@ember/test-helpers';
 import { setupRenderingTest } from 'ember-qunit';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 
 const heros = [
   { title: 'Superman', name: 'Clark Kent' },
