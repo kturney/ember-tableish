@@ -33,7 +33,7 @@ module.exports = function (environment) {
     ENV.contentSecurityPolicyHeader = null;
     ENV.contentSecurityPolicyMeta = true;
     ENV.contentSecurityPolicy = {
-      'style-src': ["'self'", "'nonce-123456789'"]
+      'style-src': ["'self'", "'nonce-123456789'"],
     };
     ENV['ember-tableish-csp-nonce'] = '123456789';
   }
@@ -51,7 +51,7 @@ module.exports = function (environment) {
 
     ENV.contentSecurityPolicyMeta = true;
     ENV.contentSecurityPolicy = {
-      'style-src': ["'self'", "'nonce-123456789'"]
+      'style-src': ["'self'", "'nonce-123456789'"],
     };
     ENV['ember-tableish-csp-nonce'] = '123456789';
   }
