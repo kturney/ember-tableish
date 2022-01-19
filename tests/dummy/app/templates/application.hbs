@@ -1,23 +1,23 @@
-{{#ember-tableish class='main-table' as |table|}}
-  {{#table.headers as |headers|}}
-    {{#headers.header width='10rem'}}
+<EmberTableish class='main-table' as |table|>
+  <table.headers as |headers|>
+    <headers.header @width='10rem'>
       Kyle
-    {{/headers.header}}
-    {{#headers.header width='10%'}}
+    </headers.header>
+    <headers.header @width='10%'>
       Justin
-    {{/headers.header}}
-    {{#headers.header}}
+    </headers.header>
+    <headers.header>
       Turney
-    {{/headers.header}}
-  {{/table.headers}}
+    </headers.header>
+  </table.headers>
 
-  {{#table.body}}
-    {{#each items as |item|}}
-      {{#table.row}}
+  <table.body>
+    {{#each this.items as |item|}}
+      <table.row>
         <div>{{item.kyle}}</div>
         <div>{{item.justin}}</div>
         <div>{{item.turney}}</div>
-      {{/table.row}}
+      </table.row>
     {{/each}}
-  {{/table.body}}
-{{/ember-tableish}}
+  </table.body>
+</EmberTableish>
