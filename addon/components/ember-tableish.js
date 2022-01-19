@@ -1,9 +1,6 @@
-import Component from '@ember/component';
-import layout from '../templates/components/ember-tableish';
-
-export default Component.extend({
-  layout,
-  classNames: ['ember-tableish'],
-
-  columnGap: null
-});
+import Component from '@glimmer/component';
+export default class EmberTableish extends Component {
+  get columnGap() {
+    return this.args.columnGap || null;
+  }
+}

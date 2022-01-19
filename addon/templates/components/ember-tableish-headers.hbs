@@ -1,26 +1,32 @@
-{{yield (hash
-  header=(component 'ember-tableish-header' headers=this)
-  Header=(component 'ember-tableish-header' headers=this)
-)}}
+<div class='ember-tableish-headers' ...attributes>
+  {{yield
+    (hash
+      header=(component 'ember-tableish-header' headers=this)
+      Header=(component 'ember-tableish-header' headers=this)
+    )
+  }}
 
-<style nonce={{this.nonce}}>
-  #{{table.elementId}} .ember-tableish-headers,
-  #{{table.elementId}} .ember-tableish-row {
-    -ms-grid-columns: {{this.msGridColumns}};
-    grid-template-columns: {{this.gridColumns}};
+  <style nonce={{this.nonce}}>
+    #{{@table.elementId}}
+    .ember-tableish-headers, #{{@table.elementId}}
+    .ember-tableish-row {
+      -ms-grid-columns: {{this.msGridColumns}};
+      grid-template-columns: {{this.gridColumns}};
 
-  {{#if table.columnGap}}
-    grid-column-gap: {{table.columnGap}};
-    column-gap: {{table.columnGap}};
-  {{/if}}
-  }
-
-  {{!-- in IE (and old Edge), items need to be explicitly positioned in the grid --}}
-  {{#each this.msCellPlacements as |placement|}}
-    #{{table.elementId}} .ember-tableish-header:nth-of-type({{placement.child}}),
-    #{{table.elementId}} .ember-tableish-row >:nth-child({{placement.child}}) {
-      -ms-grid-row: 1;
-      -ms-grid-column: {{placement.column}};
+    {{#if @table.columnGap}}
+      grid-column-gap: {{@table.columnGap}};
+      column-gap: {{@table.columnGap}};
+    {{/if}}
     }
-  {{/each}}
-</style>
+
+    {{! in IE (and old Edge), items need to be explicitly positioned in the grid }}
+    {{#each this.msCellPlacements as |placement|}}
+      #{{@table.elementId}}
+      .ember-tableish-header:nth-of-type({{placement.child}}), #{{@table.elementId}}
+      .ember-tableish-row >:nth-child({{placement.child}}) {
+        -ms-grid-row: 1;
+        -ms-grid-column: {{placement.column}};
+      }
+    {{/each}}
+  </style>
+</div>

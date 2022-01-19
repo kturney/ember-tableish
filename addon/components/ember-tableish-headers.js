@@ -1,91 +1,74 @@
-import { A as emberArray } from '@ember/array';
-import { computed } from '@ember/object';
-import Component from '@ember/component';
-import layout from '../templates/components/ember-tableish-headers';
+import Component from '@glimmer/component';
 import { getOwner } from '@ember/application';
+import { action } from '@ember/object';
+import { tracked } from 'tracked-built-ins';
+export default class EmberTableishHeaders extends Component {
+  cols = tracked(Set);
 
-export default Component.extend({
-  layout,
-  classNames: ['ember-tableish-headers'],
+  get nonce() {
+    const config = getOwner(this).resolveRegistration('config:environment');
 
-  nonce: computed({
-    get() {
-      const config = getOwner(this).resolveRegistration('config:environment');
-
-      const configNonce = config['ember-tableish-csp-nonce'];
-      if (configNonce) {
-        return configNonce;
-      }
-
-      const metaNonce = document.querySelector(
-        'meta[name="ember-tableish-csp-nonce"]'
-      );
-
-      if (metaNonce) {
-        return metaNonce.content;
-      }
-
-      return null;
-    },
-
-    set(k, v) {
-      return v;
+    const configNonce = config['ember-tableish-csp-nonce'];
+    if (configNonce) {
+      return configNonce;
     }
-  }),
 
-  gridColumns: computed('cols.@each.width', {
-    get() {
-      // see https://css-tricks.com/preventing-a-grid-blowout for why we need to use minmax
-      return this.cols.map(c => `minmax(0, ${c.width})`).join(' ');
+    const metaNonce = document.querySelector(
+      'meta[name="ember-tableish-csp-nonce"]'
+    );
+
+    if (metaNonce) {
+      return metaNonce.content;
     }
-  }),
 
-  msGridColumns: computed('gridColumns', 'table.columnGap', {
-    get() {
-      const { columnGap } = this.table;
-
-      if (columnGap) {
-        return this.cols
-          .map(c => `minmax(0, ${c.width})`)
-          .join(` ${columnGap} `);
-      }
-
-      return this.gridColumns;
-    }
-  }),
-
-  msCellPlacements: computed('cols.length', 'table.columnGap', {
-    get() {
-      const placements = [];
-      const colCount = this.cols.length;
-
-      let child = 1;
-      let column = 1;
-      const childStep = 1;
-      const columnStep = this.table.columnGap ? 2 : 1;
-
-      while (child <= colCount) {
-        placements.push({ child, column });
-
-        child += childStep;
-        column += columnStep;
-      }
-
-      return placements;
-    }
-  }),
-
-  init() {
-    this._super(...arguments);
-
-    this.cols = emberArray();
-  },
-
-  addHeader(header) {
-    this.cols.pushObject(header);
-  },
-
-  removeHeader(header) {
-    this.cols.removeObject(header);
+    return null;
   }
-});
+
+  get gridColumns() {
+    // see https://css-tricks.com/preventing-a-grid-blowout for why we need to use minmax
+    const strs = [];
+    this.cols.forEach(c => strs.push(`minmax(0, ${c.width})`));
+    return strs.join(' ');
+  }
+
+  get msGridColumns() {
+    const { columnGap } = this.args.table;
+
+    if (columnGap) {
+      const strs = [];
+      this.cols.forEach(c => strs.push(`minmax(0, ${c.width})`));
+      return strs.join(` ${columnGap} `);
+    }
+
+    return this.gridColumns;
+  }
+
+  get msCellPlacements() {
+    const placements = [];
+    const colCount = this.cols.size;
+
+    let child = 1;
+    let column = 1;
+    const childStep = 1;
+    const columnStep = this.args.table.columnGap ? 2 : 1;
+
+    while (child <= colCount) {
+      placements.push({ child, column });
+
+      child += childStep;
+      column += columnStep;
+    }
+
+    return placements;
+  }
+
+  @action
+  addHeader(header) {
+    this.cols.add(header);
+  }
+
+  @action
+  removeHeader(header) {
+    this.cols.delete(header);
+  }
+}
