@@ -1,0 +1,80 @@
+---
+language: node_js
+node_js:
+  # we recommend testing addons with the same minimum supported node version as Ember CLI
+  # so that your addon works for all apps
+  - "8"
+
+addons:
+  firefox: latest
+  chrome: stable
+
+cache:
+  yarn: true
+
+env:
+  global:
+    # See https://git.io/vdao3 for details.
+    - JOBS=1
+    - BROWSERSTACK_USERNAME="kyleturney1"
+    - BROWSERSTACK_ACCESS_KEY="E97xE6GX13djTrRoXnJi"
+    - AFTER_SCRIPT="true"
+    - BEFORE_SCRIPT="true"
+    - TEST_COMMAND=""
+    - PERCY_ENABLE=0
+
+branches:
+  only:
+    - master
+    # npm version tags
+    - /^v\d+\.\d+\.\d+/
+
+jobs:
+  fail_fast: true
+  allow_failures:
+    - env: EMBER_TRY_SCENARIO=ember-canary
+
+  include:
+    # runs linting and tests with current locked deps
+
+    - stage: "Tests"
+      nae: "Tests"
+      install:
+        - yarn install --non-interactive
+      script:
+        - yarn lint:hbs
+        - yarn lint:js
+        - PERCY_ENABLE=1 yarn test
+
+    - name: "Floating Dependencies"
+      script:
+        - yarn test
+
+    # we recommend new addons test the current and previous LTS
+    # as well as latest stable release (bonus points to beta/canary)
+    - stage: "Additional Tests"
+      env: EMBER_TRY_SCENARIO=ember-lts-3.12
+    - env: EMBER_TRY_SCENARIO=ember-lts-3.24
+    - env: EMBER_TRY_SCENARIO=ember-release
+    - env: EMBER_TRY_SCENARIO=ember-beta
+    - env: EMBER_TRY_SCENARIO=ember-canary
+    - env: EMBER_TRY_SCENARIO=ember-classic
+    - env: EMBER_TRY_SCENARIO=embroider-safe
+    - env: EMBER_TRY_SCENARIO=ember-optimized
+    - env:
+        - EMBER_TRY_SCENARIO=ember-default
+        - BEFORE_SCRIPT="ember browserstack:connect"
+        - AFTER_SCRIPT="ember browserstack:disconnect"
+        - TEST_COMMAND="ember test --config-file testem.browserstack.js"
+
+install:
+  - yarn install --no-lockfile --non-interactive
+
+script:
+  - node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO --- $TEST_COMMAND
+
+before_script:
+  - $BEFORE_SCRIPT
+
+after_script:
+  - $AFTER_SCRIPTm
