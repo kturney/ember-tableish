@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import { getOwner } from '@ember/application';
 import { action } from '@ember/object';
 import { tracked } from 'tracked-built-ins';
+
 export default class EmberTableishHeaders extends Component {
   cols = tracked(Set);
 

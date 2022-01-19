@@ -1,5 +1,6 @@
 import Component from '@glimmer/component';
 import { registerDestructor } from '@ember/destroyable';
+
 export default class EmberTableishHeader extends Component {
   get width() {
     return this.args.width || '1fr';
