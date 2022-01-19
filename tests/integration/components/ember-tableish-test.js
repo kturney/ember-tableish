@@ -1,6 +1,6 @@
 /* eslint-disable qunit/require-expect */
 import { module, test } from 'qunit';
-import { percySnapshot } from 'ember-percy';
+import percySnapshot from '@percy/ember';
 import { render } from '@ember/test-helpers';
 import { setupRenderingTest } from 'ember-qunit';
 import { hbs } from 'ember-cli-htmlbars';
