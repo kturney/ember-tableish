@@ -27,18 +27,16 @@ export default class EmberTableishHeaders extends Component {
 
   get gridColumns() {
     // see https://css-tricks.com/preventing-a-grid-blowout for why we need to use minmax
-    const strs = [];
-    this.cols.forEach((c) => strs.push(`minmax(0, ${c.width})`));
-    return strs.join(' ');
+    return [...this.cols].map((c) => `minmax(0, ${c.width})`).join(' ');
   }
 
   get msGridColumns() {
     const { columnGap } = this.args.table;
 
     if (columnGap) {
-      const strs = [];
-      this.cols.forEach((c) => strs.push(`minmax(0, ${c.width})`));
-      return strs.join(` ${columnGap} `);
+      return [...this.cols]
+        .map((c) => `minmax(0, ${c.width})`)
+        .join(` ${columnGap} `);
     }
 
     return this.gridColumns;
