@@ -3,9 +3,14 @@ name: CI
 on:
   push:
     branches:
+      - main
       - master
       - 'v*'
-  pull_request: {}
+  pull_request:
+  pull_request_target:
+  # early issue detection: run CI weekly on Sundays
+  schedule:
+    - cron: '0 6 * * 0'
 
 jobs:
   lint:

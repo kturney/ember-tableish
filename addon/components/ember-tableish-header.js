@@ -5,13 +5,13 @@ export default class EmberTableishHeader extends Component {
     return this.args.width || '1fr';
   }
 
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.args.headers.removeHeader(this);
-  }
-
   constructor() {
     super(...arguments);
     this.args.headers.addHeader(this);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.args.headers.removeHeader(this);
   }
 }
