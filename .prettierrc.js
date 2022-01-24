@@ -1,4 +1,6 @@
+'use strict';
+
 module.exports = {
   endOfLine: 'lf',
-  singleQuote: true
+  singleQuote: true,
 };

@@ -1,9 +1,16 @@
-import Component from '@ember/component';
-import layout from '../templates/components/ember-tableish';
+import Component from '@glimmer/component';
+import { tracked } from '@glimmer/tracking';
+import { guidFor } from '@ember/object/internals';
 
-export default Component.extend({
-  layout,
-  classNames: ['ember-tableish'],
+export default class EmberTableish extends Component {
+  @tracked tableId;
 
-  columnGap: null
-});
+  get columnGap() {
+    return this.args.columnGap || null;
+  }
+
+  constructor() {
+    super(...arguments);
+    this.tableId = guidFor(this);
+  }
+}

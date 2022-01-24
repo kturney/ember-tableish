@@ -1,0 +1,92 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - 'v*'
+  pull_request:
+  pull_request_target:
+  # early issue detection: run CI weekly on Sundays
+  schedule:
+    - cron: '0 6 * * 0'
+
+jobs:
+  lint:
+    name: Linting
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-node@v1
+      with:
+        node-version: 14.x
+    - name: install dependencies
+      run: yarn install --frozen-lockfile --non-interactive
+    - name: lint:js
+      run: yarn lint:js
+
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x]
+
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: install dependencies
+      run: yarn install --frozen-lockfile --non-interactive
+    - name: ember test (percy)
+      run: PERCY_ENABLE=1 yarn test:ember
+
+  floating-dependencies:
+    name: Floating Deps
+    runs-on: ubuntu-latest
+
+    needs: [test, lint]
+
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-node@v1
+      with:
+        node-version: 14.x
+    - name: install dependencies
+      run: yarn install
+    - name: ember test
+      run: yarn test:ember
+
+  try-scenarios:
+    name: Compatibility
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    needs: [test, lint]
+
+    strategy:
+      matrix:
+        ember-try-scenario:
+          - ember-lts-3.13
+          - ember-lts-3.24
+          - ember-release
+          - ember-beta
+          - ember-canary
+          - ember-default-with-jquery
+          - ember-classic
+          - embroider-safe
+          - embroider-optimized
+
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-node@v1
+      with:
+        node-version: 14.x
+    - name: install dependencies
+      run: yarn install --frozen-lockfile --non-interactive
+    - name: test
+      run: node_modules/.bin/ember try:one ${{ matrix.ember-try-scenario }} --skip-cleanup

@@ -1,21 +1,17 @@
-import Component from '@ember/component';
-import layout from '../templates/components/ember-tableish-header';
+import Component from '@glimmer/component';
 
-export default Component.extend({
-  layout,
-  classNames: ['ember-tableish-header'],
+export default class EmberTableishHeader extends Component {
+  get width() {
+    return this.args.width || '1fr';
+  }
 
-  width: '1fr',
-
-  init() {
-    this._super(...arguments);
-
-    this.headers.addHeader(this);
-  },
+  constructor() {
+    super(...arguments);
+    this.args.headers.addHeader(this);
+  }
 
   willDestroy() {
-    this._super(...arguments);
-
-    this.headers.removeHeader(this);
+    super.willDestroy(...arguments);
+    this.args.headers.removeHeader(this);
   }
-});
+}
