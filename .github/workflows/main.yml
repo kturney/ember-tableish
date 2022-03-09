@@ -30,6 +30,9 @@ jobs:
   test:
     name: Tests
     runs-on: ubuntu-latest
+    environment: ci
+    env:
+      PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
 
     strategy:
       matrix:
@@ -45,8 +48,7 @@ jobs:
       run: yarn install --frozen-lockfile --non-interactive
     - name: ember test (percy)
       run: yarn percy exec -- ember test
-      env:
-        PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
+
 
   floating-dependencies:
     name: Floating Deps
