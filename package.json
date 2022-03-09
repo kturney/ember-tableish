@@ -76,10 +76,6 @@
   "ember": {
     "edition": "octane"
   },
-  "resolutions": {
-    "**/@embroider/util": "^1.0.0",
-    "**/@embroider/macros": "^1.0.0"
-  },
   "ember-addon": {
     "configPath": "tests/dummy/config"
   }
