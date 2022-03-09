@@ -27,7 +27,6 @@
 /ember-cli-build.js
 /jsconfig.json
 /testem.js
-/testem.browserstack.js
 /tests/
 /yarn-error.log
 /yarn.lock

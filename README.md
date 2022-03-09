@@ -4,8 +4,6 @@
 [npm-badge-url]: https://www.npmjs.com/package/ember-tableish
 [ember-observer-badge]: http://emberobserver.com/badges/ember-tableish.svg
 [ember-observer-url]: http://emberobserver.com/addons/ember-tableish
-[browserstack-badge]: https://www.browserstack.com/automate/badge.svg?badge_key=VWJFUWl3OEpWRldvaXFhYU9YRWlZOWVQNmlvNGdQRnJ1bGJUVThidHowND0tLUZ6VEMxVWNnYXIwbVRQSjFhbmltNVE9PQ==--c31eecf4240110bbf5b0086e7aa698b1f23c7778
-[browserstack-badge-url]: https://www.browserstack.com/automate/badge.svg?badge_key=VWJFUWl3OEpWRldvaXFhYU9YRWlZOWVQNmlvNGdQRnJ1bGJUVThidHowND0tLUZ6VEMxVWNnYXIwbVRQSjFhbmltNVE9PQ==--c31eecf4240110bbf5b0086e7aa698b1f23c7778
 [github-actions-badge]: https://github.com/kturney/ember-tableish/actions/workflows/main.yml/badge.svg?branch=master&event=push
 [github-actions-url]: https://github.com/kturney/ember-tableish/actions/workflows/main.yml
 

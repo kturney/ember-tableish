@@ -30,7 +30,6 @@ module.exports = {
         './ember-cli-build.js',
         './index.js',
         './testem.js',
-        './testem.browserstack.js',
         './blueprints/*/index.js',
         './config/**/*.js',
         './tests/dummy/config/**/*.js',
