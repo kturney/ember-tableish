@@ -45,7 +45,7 @@ jobs:
     - name: install dependencies
       run: yarn install --frozen-lockfile --non-interactive
     - name: ember test (percy)
-      run: PERCY_TOKEN=$PERCY_TOKEN ./node_modules/.bin/percy exec -- ember test
+      run: PERCY_TOKEN=$PERCY_TOKEN ./node_modules/.bin/percy exec -- yarn test:ember
       env:
         PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
 
