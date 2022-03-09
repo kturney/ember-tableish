@@ -1,7 +1,7 @@
 /* eslint-disable qunit/require-expect */
 import { module, test } from 'qunit';
 import percySnapshot from '@percy/ember';
-import { render } from '@ember/test-helpers';
+import { render, settled } from '@ember/test-helpers';
 import { setupRenderingTest } from 'ember-qunit';
 import { hbs } from 'ember-cli-htmlbars';
 
@@ -46,6 +46,7 @@ module('Integration | Component | ember-tableish', function (hooks) {
 
     assert.dom('.ember-tableish-header').exists({ count: 2 });
     assert.dom('.ember-tableish-row').exists({ count: heros.length });
+    await settled();
 
     const colWidths = Array.from(
       this.element.querySelectorAll('.ember-tableish-header')

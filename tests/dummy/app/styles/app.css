@@ -19,5 +19,5 @@ html {
 }
 
 .ember-tableish-body {
-  overflow-y: scroll;
+  overflow-y: overlay;
 }

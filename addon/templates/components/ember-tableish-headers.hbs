@@ -8,24 +8,25 @@
 </div>
 
 {{! template-lint-disable no-forbidden-elements }}
+{{! prettier-ignore }}
 <style nonce={{this.nonce}}>
-  [data-table="{{@table.tableId}}"] .ember-tableish-headers, [data-table="{{@table.tableId}}"]
-  .ember-tableish-row { -ms-grid-columns:
-  {{this.msGridColumns}}; grid-template-columns:
-  {{this.gridColumns}};
+  [data-table="{{@table.tableId}}"] .ember-tableish-headers,
+  [data-table="{{@table.tableId}}"] .ember-tableish-row {
+    -ms-grid-columns: {{this.msGridColumns}};
+    grid-template-columns: {{this.gridColumns}};
 
-  {{#if @table.columnGap}}
-    grid-column-gap:
-    {{@table.columnGap}}; column-gap:
-    {{@table.columnGap}};
-  {{/if}}
+    {{#if @table.columnGap}}
+      grid-column-gap: {{@table.columnGap}};
+      column-gap: {{@table.columnGap}};
+    {{/if}}
   }
 
   {{! in IE (and old Edge), items need to be explicitly positioned in the grid }}
   {{#each this.msCellPlacements as |placement|}}
     [data-table="{{@table.tableId}}"] .ember-tableish-header:nth-of-type({{placement.child}}),
-    [data-table="{{@table.tableId}}"] .ember-tableish-row >:nth-child({{placement.child}})
-    { -ms-grid-row: 1; -ms-grid-column:
-    {{placement.column}}; }
+    [data-table="{{@table.tableId}}"] .ember-tableish-row >:nth-child({{placement.child}}) {
+      -ms-grid-row: 1;
+      -ms-grid-column: {{placement.column}};
+    }
   {{/each}}
 </style>
