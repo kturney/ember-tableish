@@ -1,6 +1,6 @@
 {
   "name": "ember-tableish",
-  "version": "0.2.1",
+  "version": "1.0.0",
   "description": "A grid-based table-like thing",
   "keywords": [
     "ember-addon"
