@@ -1,6 +1,7 @@
+/* eslint-disable qunit/require-expect */
 import { module, test } from 'qunit';
-import { percySnapshot } from 'ember-percy';
-import { render } from '@ember/test-helpers';
+import percySnapshot from '@percy/ember';
+import { render, settled } from '@ember/test-helpers';
 import { setupRenderingTest } from 'ember-qunit';
 import { hbs } from 'ember-cli-htmlbars';
 
@@ -14,41 +15,42 @@ const heros = [
   { title: 'Martian Manhunter', name: "J'onn J'onzz" },
   { title: 'Iron Man', name: 'Tony Stark' },
   { title: 'Hulk', name: 'Bruce Banner' },
-  { title: 'Daredevil', name: 'Matt Murdock' }
+  { title: 'Daredevil', name: 'Matt Murdock' },
 ];
 
-module('Integration | Component | ember-tableish', function(hooks) {
+module('Integration | Component | ember-tableish', function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     this.heros = heros;
   });
 
-  test('it renders columns the same width as headers', async function(assert) {
+  test('it renders columns the same width as headers', async function (assert) {
     await render(hbs`
-      {{#ember-tableish as |table|}}
-        {{#table.headers as |headers|}}
-          {{#headers.header}}Title{{/headers.header}}
-          {{#headers.header}}Name{{/headers.header}}
-        {{/table.headers}}
+      <EmberTableish as |table|>
+        <table.headers as |headers|>
+          <headers.header>Title</headers.header>
+          <headers.header>Name</headers.header>
+        </table.headers>
 
-        {{#table.body}}
-          {{#each heros as |hero|}}
-            {{#table.row}}
+        <table.body>
+          {{#each this.heros as |hero|}}
+            <table.row>
               <div class='ember-tableish-cell'>{{hero.title}}</div>
               <div class='ember-tableish-cell'>{{hero.name}}</div>
-            {{/table.row}}
+            </table.row>
           {{/each}}
-        {{/table.body}}
-      {{/ember-tableish}}
+        </table.body>
+      </EmberTableish>
     `);
 
     assert.dom('.ember-tableish-header').exists({ count: 2 });
     assert.dom('.ember-tableish-row').exists({ count: heros.length });
+    await settled();
 
     const colWidths = Array.from(
       this.element.querySelectorAll('.ember-tableish-header')
-    ).map(element => element.getBoundingClientRect().width);
+    ).map((element) => element.getBoundingClientRect().width);
 
     for (let i = 0, il = heros.length; i < il; ++i) {
       const row = `.ember-tableish-row:nth-child(${i + 1})`;
@@ -65,25 +67,25 @@ module('Integration | Component | ember-tableish', function(hooks) {
     await percySnapshot(assert);
   });
 
-  test('it handles column width changes', async function(assert) {
+  test('it handles column width changes', async function (assert) {
     this.width = '100px';
 
     await render(hbs`
-      {{#ember-tableish as |table|}}
-        {{#table.headers as |headers|}}
-          {{#headers.header width=this.width}}Title{{/headers.header}}
-          {{#headers.header}}Name{{/headers.header}}
-        {{/table.headers}}
+      <EmberTableish as |table|>
+        <table.headers as |headers|>
+          <headers.header @width={{this.width}}>Title</headers.header>
+          <headers.header>Name</headers.header>
+        </table.headers>
 
-        {{#table.body}}
-          {{#each heros as |hero|}}
-            {{#table.row}}
+        <table.body>
+          {{#each this.heros as |hero|}}
+            <table.row>
               <div class='ember-tableish-cell'>{{hero.title}}</div>
               <div class='ember-tableish-cell'>{{hero.name}}</div>
-            {{/table.row}}
+            </table.row>
           {{/each}}
-        {{/table.body}}
-      {{/ember-tableish}}
+        </table.body>
+      </EmberTableish>
     `);
 
     const origColwidth = this.element
@@ -113,6 +115,7 @@ module('Integration | Component | ember-tableish', function(hooks) {
       .getBoundingClientRect().width;
 
     assert.ok(
+      // eslint-disable-next-line qunit/no-assert-logical-expression
       updatedColwidth >= origColwidth / 2 - 1 ||
         updatedColwidth <= origColwidth / 2 + 1,
       'updated width is about half of the original width'
@@ -135,33 +138,33 @@ module('Integration | Component | ember-tableish', function(hooks) {
     await percySnapshot('it handles column width changes: updated');
   });
 
-  test('it handles column removal', async function(assert) {
+  test('it handles column removal', async function (assert) {
     this.showCol = true;
 
     await render(hbs`
-      {{#ember-tableish as |table|}}
-        {{#table.headers as |headers|}}
-          {{#headers.header}}Title{{/headers.header}}
-          {{#headers.header}}Name{{/headers.header}}
+      <EmberTableish as |table|>
+        <table.headers as |headers|>
+          <headers.header>Title</headers.header>
+          <headers.header>Name</headers.header>
 
           {{#if this.showCol}}
-            {{#headers.header}}Also name{{/headers.header}}
+            <headers.header>Also Name</headers.header>
           {{/if}}
-        {{/table.headers}}
+        </table.headers>
 
-        {{#table.body}}
-          {{#each heros as |hero|}}
-            {{#table.row}}
+        <table.body>
+          {{#each this.heros as |hero|}}
+            <table.row>
               <div class='ember-tableish-cell'>{{hero.title}}</div>
               <div class='ember-tableish-cell'>{{hero.name}}</div>
 
               {{#if this.showCol}}
                 <div class='ember-tableish-cell'>{{hero.name}}</div>
               {{/if}}
-            {{/table.row}}
+            </table.row>
           {{/each}}
-        {{/table.body}}
-      {{/ember-tableish}}
+        </table.body>
+      </EmberTableish>
     `);
 
     assert.dom('.ember-tableish-header').exists({ count: 3 });
@@ -169,7 +172,7 @@ module('Integration | Component | ember-tableish', function(hooks) {
 
     const origColwidths = Array.from(
       this.element.querySelectorAll('.ember-tableish-header')
-    ).map(element => element.getBoundingClientRect().width);
+    ).map((element) => element.getBoundingClientRect().width);
 
     for (let i = 0, il = heros.length; i < il; ++i) {
       const row = `.ember-tableish-row:nth-child(${i + 1})`;
@@ -195,12 +198,13 @@ module('Integration | Component | ember-tableish', function(hooks) {
 
     const updatedColwidths = Array.from(
       this.element.querySelectorAll('.ember-tableish-header')
-    ).map(element => element.getBoundingClientRect().width);
+    ).map((element) => element.getBoundingClientRect().width);
 
     const updatedTotal = updatedColwidths.reduce((sum, width) => sum + width);
     const origTotal = origColwidths.reduce((sum, width) => sum + width);
 
     assert.ok(
+      // eslint-disable-next-line qunit/no-assert-logical-expression
       updatedTotal >= origTotal - 1 || updatedTotal <= origTotal + 1,
       `updated width total (${updatedTotal}) is about the same as the original total (${origTotal})`
     );
@@ -224,33 +228,33 @@ module('Integration | Component | ember-tableish', function(hooks) {
     await percySnapshot('it handles column removal: updated');
   });
 
-  test('it handles column addition', async function(assert) {
+  test('it handles column addition', async function (assert) {
     this.showCol = false;
 
     await render(hbs`
-      {{#ember-tableish as |table|}}
-        {{#table.headers as |headers|}}
-          {{#headers.header}}Title{{/headers.header}}
-          {{#headers.header}}Name{{/headers.header}}
+      <EmberTableish as |table|>
+        <table.headers as |headers|>
+          <headers.header>Title</headers.header>
+          <headers.header>Name</headers.header>
 
           {{#if this.showCol}}
-            {{#headers.header}}Also name{{/headers.header}}
+            <headers.header>Also Name</headers.header>
           {{/if}}
-        {{/table.headers}}
+        </table.headers>
 
-        {{#table.body}}
-          {{#each heros as |hero|}}
-            {{#table.row}}
+        <table.body>
+          {{#each this.heros as |hero|}}
+            <table.row>
               <div class='ember-tableish-cell'>{{hero.title}}</div>
               <div class='ember-tableish-cell'>{{hero.name}}</div>
 
               {{#if this.showCol}}
                 <div class='ember-tableish-cell'>{{hero.name}}</div>
               {{/if}}
-            {{/table.row}}
+            </table.row>
           {{/each}}
-        {{/table.body}}
-      {{/ember-tableish}}
+        </table.body>
+      </EmberTableish>
     `);
 
     assert.dom('.ember-tableish-header').exists({ count: 2 });
@@ -258,7 +262,7 @@ module('Integration | Component | ember-tableish', function(hooks) {
 
     const origColwidths = Array.from(
       this.element.querySelectorAll('.ember-tableish-header')
-    ).map(element => element.getBoundingClientRect().width);
+    ).map((element) => element.getBoundingClientRect().width);
 
     for (let i = 0, il = heros.length; i < il; ++i) {
       const row = `.ember-tableish-row:nth-child(${i + 1})`;
@@ -284,12 +288,13 @@ module('Integration | Component | ember-tableish', function(hooks) {
 
     const updatedColwidths = Array.from(
       this.element.querySelectorAll('.ember-tableish-header')
-    ).map(element => element.getBoundingClientRect().width);
+    ).map((element) => element.getBoundingClientRect().width);
 
     const updatedTotal = updatedColwidths.reduce((sum, width) => sum + width);
     const origTotal = origColwidths.reduce((sum, width) => sum + width);
 
     assert.ok(
+      // eslint-disable-next-line qunit/no-assert-logical-expression
       updatedTotal >= origTotal - 1 || updatedTotal <= origTotal + 1,
       `updated width total (${updatedTotal}) is about the same as the original total (${origTotal})`
     );
@@ -313,28 +318,28 @@ module('Integration | Component | ember-tableish', function(hooks) {
     await percySnapshot('it handles column addition: updated');
   });
 
-  test('columns cannot blowout their width', async function(assert) {
+  test('columns cannot blowout their width', async function (assert) {
     this.longText = '';
     for (let i = 0; i < 100; ++i) {
       this.longText += i;
     }
 
     await render(hbs`
-      {{#ember-tableish as |table|}}
-        {{#table.headers as |headers|}}
-          {{#headers.header}}Title{{/headers.header}}
-          {{#headers.header}}Name{{/headers.header}}
-        {{/table.headers}}
+      <EmberTableish as |table|>
+        <table.headers as |headers|>
+          <headers.header>Title</headers.header>
+          <headers.header>Name</headers.header>
+        </table.headers>
 
-        {{#table.body}}
-          {{#each heros as |hero|}}
-            {{#table.row}}
+        <table.body>
+          {{#each this.heros as |hero|}}
+            <table.row>
               <pre class='ember-tableish-cell'>{{this.longText}}</pre>
               <div class='ember-tableish-cell'>{{hero.name}}</div>
-            {{/table.row}}
+            </table.row>
           {{/each}}
-        {{/table.body}}
-      {{/ember-tableish}}
+        </table.body>
+      </EmberTableish>
     `);
 
     assert.dom('.ember-tableish-header').exists({ count: 2 });
@@ -342,7 +347,7 @@ module('Integration | Component | ember-tableish', function(hooks) {
 
     const colWidths = Array.from(
       this.element.querySelectorAll('.ember-tableish-header')
-    ).map(element => element.getBoundingClientRect().width);
+    ).map((element) => element.getBoundingClientRect().width);
 
     for (let i = 0, il = heros.length; i < il; ++i) {
       const row = `.ember-tableish-row:nth-child(${i + 1})`;
@@ -359,25 +364,25 @@ module('Integration | Component | ember-tableish', function(hooks) {
     await percySnapshot(assert);
   });
 
-  test('can set and update columnGap for the table', async function(assert) {
+  test('can set and update columnGap for the table', async function (assert) {
     this.columnGap = '10px';
 
     await render(hbs`
-      {{#ember-tableish columnGap=this.columnGap as |table|}}
-        {{#table.headers as |headers|}}
-          {{#headers.header}}Title{{/headers.header}}
-          {{#headers.header}}Name{{/headers.header}}
-        {{/table.headers}}
+      <EmberTableish @columnGap={{this.columnGap}} as |table|>
+        <table.headers as |headers|>
+          <headers.header>Title</headers.header>
+          <headers.header>Name</headers.header>
+        </table.headers>
 
-        {{#table.body}}
-          {{#each heros as |hero|}}
-            {{#table.row}}
+        <table.body>
+          {{#each this.heros as |hero|}}
+            <table.row>
               <div class='ember-tableish-cell'>{{hero.title}}</div>
               <div class='ember-tableish-cell'>{{hero.name}}</div>
-            {{/table.row}}
+            </table.row>
           {{/each}}
-        {{/table.body}}
-      {{/ember-tableish}}
+        </table.body>
+      </EmberTableish>
     `);
 
     assert.dom('.ember-tableish-header').exists({ count: 2 });
@@ -427,6 +432,7 @@ module('Integration | Component | ember-tableish', function(hooks) {
       firstHeader.getBoundingClientRect().right;
 
     assert.ok(
+      // eslint-disable-next-line qunit/no-assert-logical-expression
       updatedGapSize >= origGapSize * 2 - 1 ||
         updatedGapSize <= origGapSize * 2 + 1,
       'updated gap size is about double the original gap size'

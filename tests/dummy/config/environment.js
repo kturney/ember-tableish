@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function(environment) {
+module.exports = function (environment) {
   let ENV = {
     modulePrefix: 'dummy',
     environment,
@@ -13,14 +13,14 @@ module.exports = function(environment) {
       },
       EXTEND_PROTOTYPES: {
         // Prevent Ember Data from overriding Date.parse.
-        Date: false
-      }
+        Date: false,
+      },
     },
 
     APP: {
       // Here you can pass flags/options to your application instance
       // when it is created
-    }
+    },
   };
 
   if (environment === 'development') {
@@ -29,13 +29,7 @@ module.exports = function(environment) {
     // ENV.APP.LOG_TRANSITIONS = true;
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
-
     ENV.contentSecurityPolicyHeader = null;
-    ENV.contentSecurityPolicyMeta = true;
-    ENV.contentSecurityPolicy = {
-      'style-src': ["'self'", "'nonce-123456789'"]
-    };
-    ENV['ember-tableish-csp-nonce'] = '123456789';
   }
 
   if (environment === 'test') {
@@ -48,10 +42,12 @@ module.exports = function(environment) {
 
     ENV.APP.rootElement = '#ember-testing';
     ENV.APP.autoboot = false;
+  }
 
+  if (environment === 'development' || environment === 'test') {
     ENV.contentSecurityPolicyMeta = true;
     ENV.contentSecurityPolicy = {
-      'style-src': ["'self'", "'nonce-123456789'"]
+      'style-src': ["'self'", "'nonce-123456789'"],
     };
     ENV['ember-tableish-csp-nonce'] = '123456789';
   }
